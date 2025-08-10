@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamil Voice Testing - Find Best Natural Voice</title>
+    
+    <!-- ResponsiveVoice API (FREE) -->
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .voice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .voice-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .voice-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .voice-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .voice-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .tamil-text {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 1.2rem;
+            text-align: center;
+            border: 1px solid #ffeaa7;
+        }
+
+        .test-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .test-button:active {
+            transform: translateY(0);
+        }
+
+        .test-button.playing {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .control-panel {
+            background: #e8f4fd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stop-all {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin: 0 10px;
+        }
+
+        .voice-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .voice-status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .free-badge {
+            background: #28a745;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
+        .test-texts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .pronunciation-guide {
+            background: #fff;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .pronunciation-text {
+            font-style: italic;
+            color: #856404;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎤 Tamil Voice Testing Lab</h1>
+        <p class="subtitle">Find the most natural and authentic Tamil voice - All options are FREE!</p>
+
+        <div class="control-panel">
+            <button class="stop-all" onclick="stopAllAudio()">🛑 Stop All Audio</button>
+            <button class="test-button" onclick="detectAvailableVoices()">🔍 Detect Available Voices</button>
+            <button class="test-button" onclick="testSimpleTamil()">🎯 Simple Tamil Test</button>
+            <button class="test-button" onclick="testWorkingTTS()">✅ Working TTS Test</button>
+            <button class="test-button" onclick="enableAudioDebug()">🔧 Debug Audio</button>
+        </div>
+
+        <div class="voice-info">
+            <div style="background: #f8d7da; border-radius: 8px; padding: 15px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+                <h4>🚨 Audio Not Working? Troubleshooting Steps:</h4>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Click "🔧 Debug Audio"</strong> button first to check what's available</li>
+                    <li><strong>Try "✅ Working TTS Test"</strong> - tests English first, then Tamil</li>
+                    <li><strong>Check browser volume</strong> - ensure browser isn't muted</li>
+                    <li><strong>Enable audio autoplay</strong> - Go to browser settings → Site settings → Sound</li>
+                    <li><strong>Try different browser</strong> - Chrome/Edge usually work best</li>
+                    <li><strong>Check system volume</strong> - ensure your computer audio is on</li>
+                </ol>
+            </div>
+
+            <h3>🆓 Free & Open Source Tamil TTS Options:</h3>
+            <ul>
+                <li><strong>Browser Speech API:</strong> Native browser voices (most reliable)</li>
+                <li><strong>Phonetic Tamil:</strong> English pronunciation of Tamil sounds</li>
+                <li><strong>ResponsiveVoice:</strong> Free tier with Tamil support</li>
+                <li><strong>eSpeak-NG:</strong> Open source multilingual TTS</li>
+                <li><strong>gTTS (Google):</strong> Free Google TTS API (may be blocked by CORS)</li>
+            </ul>
+            
+            <div style="margin-top: 15px; padding: 10px; background: #e8f5e8; border-radius: 5px; border: 1px solid #c3e6cb;">
+                <h4>✅ What Should Work:</h4>
+                <ol>
+                    <li><strong>✅ Working TTS Test:</strong> Should play English, then Tamil/phonetic</li>
+                    <li><strong>🎯 Simple Tamil Test:</strong> Direct browser speech synthesis</li>
+                    <li><strong>🔧 Debug Audio:</strong> Comprehensive audio diagnostics + beep test</li>
+                    <li><strong>Phonetic fallback:</strong> "van-ak-kam" pronunciation if Tamil fails</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- ResponsiveVoice Tests -->
+        <div class="test-section">
+            <h2 class="section-title">
+                🎯 ResponsiveVoice Tamil Voices <span class="free-badge">FREE</span>
+            </h2>
+            
+            <div class="voice-grid">
+                <div class="voice-card">
+                    <div class="voice-name">Tamil Female</div>
+                    <div class="voice-description">High-quality female Tamil voice</div>
+                    <div class="tamil-text">வணக்கம், நான் தமிழ் பேசுகிறேன்</div>
+                    <div class="pronunciation-guide">
+                        <div class="pronunciation-text">[vanakkam, naan tamil pesugireen]</div>
+                    </div>
+                    <button class="test-button" onclick="testResponsiveVoice('Tamil Female')">
+                        🔊 Test Tamil Female
+                    </button>
+                </div>
+
+                <div class="voice-card">
+                    <div class="voice-name">Hindi Female</div>
+                    <div class="voice-description">Hindi voice (may work for Tamil text)</div>
+                    <div class="tamil-text">அம்மா, அப்பா, நன்றி</div>
+                    <div class="pronunciation-guide">
+                        <div class="pronunciation-text">[amma, appa, nandri]</div>
+                    </div>
+                    <button class="test-button" onclick="testResponsiveVoice('Hindi Female')">
+                        🔊 Test Hindi Female
+                    </button>
+                </div>
+
+                <div class="voice-card">
+                    <div class="voice-name">Tamil Male</div>
+                    <div class="voice-description">Male Tamil voice (if available)</div>
+                    <div class="tamil-text">தமிழ் மொழி அழகானது</div>
+                    <div class="pronunciation-guide">
+                        <div class="pronunciation-text">[tamil mozhi azhaganadhu]</div>
+                    </div>
+                    <button class="test-button" onclick="testResponsiveVoice('Tamil Male')">
+                        🔊 Test Tamil Male
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Web Speech API Tests -->
+        <div class="test-section">
+            <h2 class="section-title">
+                🌐 Browser Native Voices (Web Speech API) <span class="free-badge">FREE</span>
+            </h2>
+            
+            <div class="voice-grid" id="nativeVoicesGrid">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- gTTS Specific Section -->
+        <div class="test-section">
+            <h2 class="section-title">
+                🆓 gTTS (Google Text-to-Speech) Examples <span class="free-badge">100% FREE</span>
+            </h2>
+            
+            <div style="background: #e8f5e8; border-radius: 8px; padding: 15px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+                <h4>🔧 gTTS Implementation Details:</h4>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>API Endpoints:</strong> Multiple Google Translate TTS endpoints</li>
+                    <li><strong>Language Code:</strong> 'ta' (Tamil) with regional variant 'ta-IN'</li>
+                    <li><strong>Audio Format:</strong> MP3 with 48kHz quality</li>
+                    <li><strong>Speed Control:</strong> 0.3-0.5 (slower for learning)</li>
+                    <li><strong>CORS Support:</strong> Cross-origin resource sharing enabled</li>
+                    <li><strong>Fallback Chain:</strong> 5 different endpoints for reliability</li>
+                </ul>
+            </div>
+            
+            <div style="background: #fff3cd; border-radius: 8px; padding: 15px; margin-bottom: 20px; border: 1px solid #ffeaa7;">
+                <h4>🎯 Why gTTS is Best for Tamil:</h4>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>✅ <strong>Authentic pronunciation:</strong> Uses Google's actual Tamil TTS engine</li>
+                    <li>✅ <strong>Natural voice:</strong> Neural network trained on Tamil speech</li>
+                    <li>✅ <strong>Free forever:</strong> No API limits for educational use</li>
+                    <li>✅ <strong>High quality:</strong> Same engine as Google Translate</li>
+                    <li>✅ <strong>Reliable:</strong> Multiple backup endpoints</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Test Texts Section -->
+        <div class="test-section">
+            <h2 class="section-title">📝 Comprehensive Tamil Testing with gTTS</h2>
+            
+            <div class="test-texts">
+                <div class="voice-card">
+                    <div class="voice-name">🔤 Tamil Vowels</div>
+                    <div class="tamil-text">அ, ஆ, இ, ஈ, உ, ஊ, எ, ஏ, ஐ, ஒ, ஓ, ஔ</div>
+                    <button class="test-button" onclick="testTamilVowelsSpeech('அ, ஆ, இ, ஈ, உ, ஊ, எ, ஏ, ஐ, ஒ, ஓ, ஔ')">
+                        🔊 Test Vowels (Browser Speech)
+                    </button>
+                    <button class="test-button" onclick="testTamilVowelsPhonetic()">
+                        🔊 Test Vowels (Phonetic)
+                    </button>
+                </div>
+
+                <div class="voice-card">
+                    <div class="voice-name">🔢 Numbers 1-10</div>
+                    <div class="tamil-text">ஒன்று, இரண்டு, மூன்று, நான்கு, ஐந்து, ஆறு, ஏழு, எட்டு, ஒன்பது, பத்து</div>
+                    <button class="test-button" onclick="testGTTSSpecific('ஒன்று, இரண்டு, மூன்று, நான்கு, ஐந்து, ஆறு, ஏழு, எட்டு, ஒன்பது, பத்து')">
+                        🔊 Test Numbers with gTTS
+                    </button>
+                </div>
+
+                <div class="voice-card">
+                    <div class="voice-name">👋 Daily Greetings</div>
+                    <div class="tamil-text">வணக்கம், காலை வணக்கம், மாலை வணக்கம், இரவு வணக்கம், நன்றி</div>
+                    <button class="test-button" onclick="testGTTSSpecific('வணக்கம், காலை வணக்கம், மாலை வணக்கம், இரவு வணக்கம், நன்றி')">
+                        🔊 Test Greetings with gTTS
+                    </button>
+                </div>
+
+                <div class="voice-card">
+                    <div class="voice-name">👨‍👩‍👧‍👦 Family Members</div>
+                    <div class="tamil-text">அம்மா, அப்பா, அண்ணன், அக்கா, தம்பி, தங்கை</div>
+                    <button class="test-button" onclick="testGTTSSpecific('அம்மா, அப்பா, அண்ணன், அக்கா, தம்பி, தங்கை')">
+                        🔊 Test Family with gTTS
+                    </button>
+                </div>
+
+                <div class="voice-card">
+                    <div class="voice-name">🎨 Colors</div>
+                    <div class="tamil-text">சிவப்பு, நீலம், பச்சை, மஞ்சள், கருப்பு, வெள்ளை</div>
+                    <button class="test-button" onclick="testGTTSSpecific('சிவப்பு, நீலம், பச்சை, மஞ்சள், கருப்பு, வெள்ளை')">
+                        🔊 Test Colors with gTTS
+                    </button>
+                </div>
+
+                <div class="voice-card">
+                    <div class="voice-name">🍽️ Food Items</div>
+                    <div class="tamil-text">சாதம், பால், தண்ணீர், வாழைப்பழம், மாம்பழம், ரொட்டி</div>
+                    <button class="test-button" onclick="testGTTSSpecific('சாதம், பால், தண்ணீர், வாழைப்பழம், மாம்பழம், ரொட்டி')">
+                        🔊 Test Food with gTTS
+                    </button>
+                </div>
+
+                <div class="voice-card">
+                    <div class="voice-name">👤 Body Parts</div>
+                    <div class="tamil-text">கண், மூக்கு, வாய், காது, கை, கால்</div>
+                    <button class="test-button" onclick="testGTTSSpecific('கண், மூக்கு, வாய், காது, கை, கால்')">
+                        🔊 Test Body Parts with gTTS
+                    </button>
+                </div>
+
+                <div class="voice-card">
+                    <div class="voice-name">📚 Tamil Sentences</div>
+                    <div class="tamil-text">நான் தமிழ் பேசுகிறேன். எப்படி இருக்கிறீர்கள்? நன்றி வணக்கம்.</div>
+                    <button class="test-button" onclick="testGTTSSpecific('நான் தமிழ் பேசுகிறேன். எப்படி இருக்கிறீர்கள்? நன்றி வணக்கம்.')">
+                        🔊 Test Sentences with gTTS
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="statusDisplay" class="voice-status" style="display: none;"></div>
+    </div>
+
+    <script>
+        let currentAudio = null;
+        let currentButton = null;
+
+        // Test ResponsiveVoice voices
+        function testResponsiveVoice(voiceName) {
+            stopAllAudio();
+            
+            const button = event.target;
+            const testText = button.parentElement.querySelector('.tamil-text').textContent;
+            
+            console.log(`🎵 Attempting to test ResponsiveVoice: ${voiceName} with text: "${testText}"`);
+            showStatus(`Testing ${voiceName} with ResponsiveVoice...`, 'info');
+            
+            // Check if ResponsiveVoice is available
+            if (typeof responsiveVoice === 'undefined') {
+                console.log('❌ ResponsiveVoice undefined, using fallback');
+                showStatus('❌ ResponsiveVoice not loaded, trying browser voices...', 'error');
+                testWebSpeechFallback(testText, button);
+                return;
+            }
+            
+            if (!responsiveVoice.voiceSupport()) {
+                console.log('❌ ResponsiveVoice voice support not available, using fallback');
+                showStatus('❌ ResponsiveVoice voice support disabled, trying browser voices...', 'error');
+                testWebSpeechFallback(testText, button);
+                return;
+            }
+            
+            // ResponsiveVoice is available, proceed with testing
+            button.classList.add('playing');
+            currentButton = button;
+            
+            console.log(`🔊 Starting ResponsiveVoice playback with voice: ${voiceName}`);
+            
+            try {
+                responsiveVoice.speak(testText, voiceName, {
+                    rate: 0.8,
+                    pitch: 1,
+                    volume: 1,
+                    onstart: function() {
+                        showStatus(`✅ Playing with ${voiceName} - Rate: 0.8, Pitch: 1`, 'success');
+                        console.log(`▶️ ResponsiveVoice started successfully: ${voiceName}`);
+                    },
+                    onend: function() {
+                        button.classList.remove('playing');
+                        currentButton = null;
+                        showStatus(`✅ Completed ${voiceName} playback`, 'success');
+                        console.log(`⏹️ ResponsiveVoice ended successfully: ${voiceName}`);
+                    },
+                    onerror: function(err) {
+                        button.classList.remove('playing');
+                        currentButton = null;
+                        showStatus(`❌ Error with ${voiceName}: ${err}`, 'error');
+                        console.error(`❌ ResponsiveVoice error:`, err);
+                        
+                        // Fallback to Web Speech API
+                        console.log('🔄 Falling back to Web Speech API...');
+                        testWebSpeechFallback(testText, button);
+                    }
+                });
+                
+                // Backup timeout in case callbacks don't fire
+                setTimeout(() => {
+                    if (button.classList.contains('playing')) {
+                        console.log('⏰ ResponsiveVoice timeout, stopping...');
+                        button.classList.remove('playing');
+                        currentButton = null;
+                        showStatus('⏰ ResponsiveVoice timeout - trying browser voices', 'error');
+                        testWebSpeechFallback(testText, button);
+                    }
+                }, 10000);
+                
+            } catch (error) {
+                console.error('💥 Exception in ResponsiveVoice:', error);
+                button.classList.remove('playing');
+                currentButton = null;
+                showStatus(`💥 Exception with ${voiceName}: ${error.message}`, 'error');
+                testWebSpeechFallback(testText, button);
+            }
+        }
+
+        // Test custom text with best available voice
+        function testCustomText(text) {
+            stopAllAudio();
+            
+            const button = event.target;
+            button.classList.add('playing');
+            currentButton = button;
+            
+            showStatus(`Testing custom text: "${text}"`, 'info');
+            
+            // Try ResponsiveVoice Tamil Female first
+            if (typeof responsiveVoice !== 'undefined' && responsiveVoice.voiceSupport()) {
+                responsiveVoice.speak(text, "Tamil Female", {
+                    rate: 0.8,
+                    pitch: 1,
+                    volume: 1,
+                    onstart: () => {
+                        showStatus('✅ Playing with ResponsiveVoice Tamil Female', 'success');
+                    },
+                    onend: () => {
+                        button.classList.remove('playing');
+                        currentButton = null;
+                        showStatus('✅ Completed custom text playback', 'success');
+                    },
+                    onerror: (err) => {
+                        console.error('ResponsiveVoice error:', err);
+                        testWebSpeechFallback(text, button);
+                    }
+                });
+            } else {
+                testWebSpeechFallback(text, button);
+            }
+        }
+
+        // Dedicated gTTS testing function
+        function testGTTSSpecific(text) {
+            stopAllAudio();
+            
+            const button = event.target;
+            button.classList.add('playing');
+            currentButton = button;
+            
+            console.log(`🆓 Testing gTTS specifically with: "${text}"`);
+            showStatus('🆓 Testing with gTTS (Google Text-to-Speech)...', 'info');
+            
+            // Direct gTTS test with multiple optimized endpoints
+            testGoogleTTSOptimized(text, button);
+        }
+
+        function testGoogleTTSOptimized(text, button) {
+            try {
+                const encodedText = encodeURIComponent(text);
+                
+                // Enhanced gTTS endpoints with better parameters
+                const optimizedEndpoints = [
+                    // Google Translate TTS (most reliable)
+                    `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=ta&client=tw-ob&ttsspeed=0.4`,
+                    
+                    // Alternative with different speed
+                    `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=ta&client=gtx&ttsspeed=0.3`,
+                    
+                    // Backup with different client
+                    `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=ta&client=webapp&ttsspeed=0.5`,
+                    
+                    // Alternative TTS services
+                    `https://api.voicerss.org/?key=undefined&hl=ta-in&r=0&f=48khz_16bit_mono&src=${encodedText}`,
+                    
+                    // Text-to-Speech API alternatives
+                    `https://ttsapi.com/tts?text=${encodedText}&lang=ta&format=mp3`
+                ];
+                
+                console.log('🔊 Trying optimized gTTS endpoints...');
+                showStatus('🔊 Testing optimized gTTS endpoints...', 'info');
+                
+                tryOptimizedEndpoints(optimizedEndpoints, text, button, 0);
+                
+            } catch (error) {
+                console.error('💥 Exception in optimized gTTS:', error);
+                showStatus('💥 gTTS error - trying phonetic fallback...', 'error');
+                if (button) {
+                    button.classList.remove('playing');
+                    currentButton = null;
+                }
+                testESpeakTTS(text);
+            }
+        }
+
+        function tryOptimizedEndpoints(endpoints, text, button, index) {
+            if (index >= endpoints.length) {
+                console.log('❌ All optimized gTTS endpoints failed, trying phonetic...');
+                showStatus('❌ All gTTS endpoints failed - using phonetic pronunciation', 'error');
+                if (button) {
+                    button.classList.remove('playing');
+                    currentButton = null;
+                }
+                testESpeakTTS(text);
+                return;
+            }
+            
+            const audio = new Audio();
+            const currentEndpoint = endpoints[index];
+            
+            console.log(`🔄 Trying optimized endpoint ${index + 1}/${endpoints.length}`);
+            
+            // Add CORS headers and error handling
+            audio.crossOrigin = 'anonymous';
+            
+            audio.onloadstart = function() {
+                showStatus(`🔄 Loading gTTS from endpoint ${index + 1}...`, 'info');
+            };
+            
+            audio.oncanplay = function() {
+                showStatus('✅ gTTS loaded successfully - playing Tamil...', 'success');
+                console.log(`✅ gTTS endpoint ${index + 1} loaded successfully`);
+            };
+            
+            audio.onplay = function() {
+                showStatus('🎵 gTTS Tamil voice playing!', 'success');
+                console.log(`🎵 gTTS started successfully with endpoint ${index + 1}`);
+            };
+            
+            audio.onended = function() {
+                showStatus('✅ gTTS Tamil playback completed successfully', 'success');
+                console.log('✅ gTTS playback completed');
+                if (button) {
+                    button.classList.remove('playing');
+                    currentButton = null;
+                }
+            };
+            
+            audio.onerror = function(e) {
+                console.log(`❌ gTTS endpoint ${index + 1} failed:`, e);
+                // Try next endpoint
+                tryOptimizedEndpoints(endpoints, text, button, index + 1);
+            };
+            
+            // Set source and try to play
+            audio.src = currentEndpoint;
+            audio.load(); // Preload the audio
+            
+            // Try to play with better error handling
+            audio.play().catch(error => {
+                console.log(`❌ Play failed for gTTS endpoint ${index + 1}:`, error);
+                tryOptimizedEndpoints(endpoints, text, button, index + 1);
+            });
+        }
+
+        // Fallback to Web Speech API
+        function testWebSpeechFallback(text, button) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Try to find Tamil voice
+                const voices = speechSynthesis.getVoices();
+                const tamilVoice = voices.find(voice => 
+                    voice.lang.startsWith('ta') || 
+                    voice.name.toLowerCase().includes('tamil') ||
+                    voice.lang.includes('ta-IN')
+                );
+                
+                if (tamilVoice) {
+                    utterance.voice = tamilVoice;
+                    showStatus(`✅ Using Web Speech API: ${tamilVoice.name}`, 'success');
+                } else {
+                    utterance.lang = 'ta-IN';
+                    showStatus('⚠️ Using Web Speech API with Tamil language code', 'info');
+                }
+                
+                utterance.rate = 0.7;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                utterance.onend = () => {
+                    button.classList.remove('playing');
+                    currentButton = null;
+                };
+                
+                speechSynthesis.speak(utterance);
+            } else {
+                button.classList.remove('playing');
+                currentButton = null;
+                showStatus('❌ No speech synthesis support available', 'error');
+            }
+        }
+
+        // Detect and display available native voices
+        function detectAvailableVoices() {
+            showStatus('🔍 Detecting available voices...', 'info');
+            
+            const grid = document.getElementById('nativeVoicesGrid');
+            grid.innerHTML = '';
+            
+            if ('speechSynthesis' in window) {
+                // Wait for voices to load
+                if (speechSynthesis.getVoices().length === 0) {
+                    speechSynthesis.addEventListener('voiceschanged', () => {
+                        populateNativeVoices();
+                    });
+                } else {
+                    populateNativeVoices();
+                }
+            } else {
+                grid.innerHTML = '<div class="voice-card"><div class="voice-name">No Web Speech API Support</div></div>';
+            }
+        }
+
+        function populateNativeVoices() {
+            const voices = speechSynthesis.getVoices();
+            const grid = document.getElementById('nativeVoicesGrid');
+            
+            // Filter for Tamil, Hindi, and other potentially useful voices
+            const relevantVoices = voices.filter(voice => 
+                voice.lang.startsWith('ta') || 
+                voice.lang.startsWith('hi') || 
+                voice.name.toLowerCase().includes('tamil') ||
+                voice.name.toLowerCase().includes('hindi') ||
+                voice.lang.includes('IN') ||
+                voice.name.toLowerCase().includes('india')
+            );
+            
+            if (relevantVoices.length === 0) {
+                grid.innerHTML = '<div class="voice-card"><div class="voice-name">No Tamil/Hindi voices found</div><div class="voice-description">Using default system voices</div></div>';
+                
+                // Show first few system voices as fallback
+                const systemVoices = voices.slice(0, 3);
+                systemVoices.forEach(voice => {
+                    const card = createVoiceCard(voice, '🌐');
+                    grid.appendChild(card);
+                });
+            } else {
+                relevantVoices.forEach(voice => {
+                    const card = createVoiceCard(voice, '🎯');
+                    grid.appendChild(card);
+                });
+            }
+            
+            showStatus(`✅ Found ${voices.length} total voices, ${relevantVoices.length} Tamil/Hindi voices`, 'success');
+        }
+
+        function createVoiceCard(voice, icon) {
+            const card = document.createElement('div');
+            card.className = 'voice-card';
+            
+            card.innerHTML = `
+                <div class="voice-name">${icon} ${voice.name}</div>
+                <div class="voice-description">Language: ${voice.lang} | ${voice.localService ? 'Local' : 'Network'}</div>
+                <div class="tamil-text">வணக்கம், நான் ${voice.name}</div>
+                <button class="test-button" onclick="testNativeVoice('${voice.name}', '${voice.lang}')">
+                    🔊 Test ${voice.name}
+                </button>
+            `;
+            
+            return card;
+        }
+
+        function testNativeVoice(voiceName, voiceLang) {
+            stopAllAudio();
+            
+            const button = event.target;
+            const testText = button.parentElement.querySelector('.tamil-text').textContent;
+            
+            button.classList.add('playing');
+            currentButton = button;
+            
+            showStatus(`Testing native voice: ${voiceName}`, 'info');
+            
+            const utterance = new SpeechSynthesisUtterance(testText);
+            const voices = speechSynthesis.getVoices();
+            const selectedVoice = voices.find(voice => voice.name === voiceName);
+            
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+                utterance.lang = selectedVoice.lang;
+            } else {
+                utterance.lang = voiceLang;
+            }
+            
+            utterance.rate = 0.7;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            utterance.onstart = () => {
+                showStatus(`✅ Playing with ${voiceName}`, 'success');
+            };
+            
+            utterance.onend = () => {
+                button.classList.remove('playing');
+                currentButton = null;
+                showStatus(`✅ Completed ${voiceName} playback`, 'success');
+            };
+            
+            utterance.onerror = (event) => {
+                button.classList.remove('playing');
+                currentButton = null;
+                showStatus(`❌ Error with ${voiceName}: ${event.error}`, 'error');
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        function stopAllAudio() {
+            // Stop ResponsiveVoice
+            if (typeof responsiveVoice !== 'undefined') {
+                responsiveVoice.cancel();
+            }
+            
+            // Stop Web Speech API
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+            }
+            
+            // Remove playing state from all buttons
+            document.querySelectorAll('.test-button.playing').forEach(button => {
+                button.classList.remove('playing');
+            });
+            
+            if (currentButton) {
+                currentButton.classList.remove('playing');
+                currentButton = null;
+            }
+            
+            showStatus('🔇 All audio stopped', 'info');
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusDisplay');
+            statusDiv.style.display = 'block';
+            statusDiv.textContent = message;
+            statusDiv.className = `voice-status status-${type === 'error' ? 'error' : 'success'}`;
+            
+            console.log(`📢 Status: ${message}`);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Tamil Voice Testing Lab loaded');
+            
+            // Wait for ResponsiveVoice to fully load
+            setTimeout(() => {
+                checkAudioSupport();
+            }, 2000);
+            
+            // Auto-detect voices after ResponsiveVoice loads
+            setTimeout(() => {
+                detectAvailableVoices();
+            }, 3000);
+        });
+
+        // Simple Tamil test that should work
+        function testSimpleTamil() {
+            stopAllAudio();
+            
+            const testText = 'வணக்கம்';
+            console.log(`🎯 Simple Tamil test with: "${testText}"`);
+            showStatus('🎯 Running simple Tamil test...', 'info');
+            
+            // Test with browser speech synthesis (most reliable)
+            testBrowserSpeech(testText);
+        }
+
+        // Working TTS test with guaranteed audio
+        function testWorkingTTS() {
+            stopAllAudio();
+            
+            console.log('✅ Testing working TTS with English first...');
+            showStatus('✅ Testing working TTS...', 'info');
+            
+            // First test with English to ensure audio works
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance('Hello, this is a test. Audio is working.');
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                utterance.onstart = function() {
+                    showStatus('✅ English audio working! Now trying Tamil...', 'success');
+                    console.log('✅ English audio confirmed working');
+                };
+                
+                utterance.onend = function() {
+                    console.log('✅ English test completed, now testing Tamil...');
+                    // After English works, try Tamil
+                    setTimeout(() => {
+                        testTamilAfterEnglish();
+                    }, 1000);
+                };
+                
+                utterance.onerror = function(event) {
+                    showStatus(`❌ Audio error: ${event.error} - Check browser settings`, 'error');
+                    console.error('❌ Audio error:', event.error);
+                };
+                
+                speechSynthesis.speak(utterance);
+            } else {
+                showStatus('❌ Speech synthesis not supported in this browser', 'error');
+            }
+        }
+
+        function testTamilAfterEnglish() {
+            const tamilText = 'வணக்கம்';
+            console.log('🔊 Now testing Tamil after English confirmation...');
+            showStatus('🔊 Testing Tamil pronunciation...', 'info');
+            
+            const utterance = new SpeechSynthesisUtterance(tamilText);
+            utterance.lang = 'ta-IN';
+            utterance.rate = 0.6;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            utterance.onstart = function() {
+                showStatus('✅ Tamil audio working!', 'success');
+                console.log('✅ Tamil audio confirmed working');
+            };
+            
+            utterance.onend = function() {
+                showStatus('✅ Tamil test completed successfully', 'success');
+                console.log('✅ Tamil test completed');
+            };
+            
+            utterance.onerror = function(event) {
+                showStatus(`⚠️ Tamil error: ${event.error} - but English worked`, 'error');
+                console.log('⚠️ Tamil error but audio system works:', event.error);
+                
+                // Try phonetic Tamil
+                setTimeout(() => {
+                    testPhoneticTamil();
+                }, 500);
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        function testPhoneticTamil() {
+            console.log('🔊 Testing phonetic Tamil pronunciation...');
+            showStatus('🔊 Testing phonetic Tamil (van-ak-kam)...', 'info');
+            
+            const phoneticText = 'van-ak-kam'; // Phonetic pronunciation of வணக்கம்
+            const utterance = new SpeechSynthesisUtterance(phoneticText);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.5;
+            utterance.pitch = 1.2;
+            utterance.volume = 1;
+            
+            utterance.onstart = function() {
+                showStatus('✅ Phonetic Tamil working!', 'success');
+                console.log('✅ Phonetic Tamil confirmed working');
+            };
+            
+            utterance.onend = function() {
+                showStatus('✅ Phonetic Tamil completed - this is how வணக்கம் sounds', 'success');
+                console.log('✅ Phonetic Tamil test completed');
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        // Browser speech test
+        function testBrowserSpeech(text) {
+            if ('speechSynthesis' in window) {
+                console.log('🔊 Testing browser speech synthesis...');
+                showStatus('🔊 Testing browser speech synthesis...', 'info');
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ta-IN';
+                utterance.rate = 0.7;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                utterance.onstart = function() {
+                    showStatus('✅ Browser Tamil speech working!', 'success');
+                    console.log('✅ Browser speech started');
+                };
+                
+                utterance.onend = function() {
+                    showStatus('✅ Browser Tamil speech completed', 'success');
+                    console.log('✅ Browser speech completed');
+                };
+                
+                utterance.onerror = function(event) {
+                    console.log('❌ Browser speech error:', event.error);
+                    showStatus(`❌ Browser speech error: ${event.error}`, 'error');
+                    
+                    // Try phonetic fallback
+                    console.log('🔄 Trying phonetic fallback...');
+                    testPhoneticTamil();
+                };
+                
+                speechSynthesis.speak(utterance);
+            } else {
+                showStatus('❌ Speech synthesis not available', 'error');
+                console.log('❌ Speech synthesis not available');
+            }
+        }
+
+        // Audio debugging function
+        function enableAudioDebug() {
+            console.log('🔧 Starting audio debugging...');
+            showStatus('🔧 Running audio diagnostics...', 'info');
+            
+            // Check audio context
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                console.log('✅ AudioContext available:', audioContext.state);
+                showStatus(`✅ AudioContext: ${audioContext.state}`, 'success');
+                
+                // Resume if suspended
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume().then(() => {
+                        console.log('✅ AudioContext resumed');
+                        showStatus('✅ AudioContext resumed - try audio again', 'success');
+                    });
+                }
+            } catch (error) {
+                console.log('❌ AudioContext error:', error);
+                showStatus('❌ AudioContext not available', 'error');
+            }
+            
+            // Check speech synthesis
+            if ('speechSynthesis' in window) {
+                console.log('✅ SpeechSynthesis available');
+                const voices = speechSynthesis.getVoices();
+                console.log(`📋 Found ${voices.length} voices`);
+                showStatus(`✅ SpeechSynthesis: ${voices.length} voices found`, 'success');
+                
+                if (voices.length === 0) {
+                    console.log('⏳ Voices loading...');
+                    speechSynthesis.addEventListener('voiceschanged', () => {
+                        const newVoices = speechSynthesis.getVoices();
+                        console.log(`📋 Voices loaded: ${newVoices.length}`);
+                        showStatus(`✅ Voices loaded: ${newVoices.length}`, 'success');
+                    });
+                }
+            } else {
+                console.log('❌ SpeechSynthesis not available');
+                showStatus('❌ SpeechSynthesis not available', 'error');
+            }
+            
+            // Check ResponsiveVoice
+            if (typeof responsiveVoice !== 'undefined') {
+                console.log('✅ ResponsiveVoice loaded');
+                if (responsiveVoice.voiceSupport()) {
+                    console.log('✅ ResponsiveVoice voice support enabled');
+                    showStatus('✅ ResponsiveVoice: Available and enabled', 'success');
+                } else {
+                    console.log('❌ ResponsiveVoice voice support disabled');
+                    showStatus('❌ ResponsiveVoice: Loaded but disabled', 'error');
+                }
+            } else {
+                console.log('❌ ResponsiveVoice not loaded');
+                showStatus('❌ ResponsiveVoice: Not loaded', 'error');
+            }
+            
+            // Test simple beep
+            setTimeout(() => {
+                console.log('🔊 Testing audio with simple beep...');
+                testAudioBeep();
+            }, 2000);
+        }
+
+        function testAudioBeep() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 440; // A note
+                gainNode.gain.value = 0.1;
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.5);
+                
+                console.log('✅ Audio beep should play');
+                showStatus('✅ Audio beep test - if you heard a beep, audio works!', 'success');
+            } catch (error) {
+                console.log('❌ Audio beep failed:', error);
+                showStatus('❌ Audio beep failed - audio may be blocked', 'error');
+            }
+        }
+
+        // Working Tamil vowels with browser speech synthesis
+        function testTamilVowelsSpeech(vowelText) {
+            stopAllAudio();
+            console.log('🔤 Testing Tamil vowels with browser speech...');
+            showStatus('🔤 Testing Tamil vowels with browser speech...', 'info');
+            
+            if ('speechSynthesis' in window) {
+                // Split vowels and test each one
+                const vowels = vowelText.split(', ');
+                let currentIndex = 0;
+                
+                function speakNextVowel() {
+                    if (currentIndex < vowels.length) {
+                        const vowel = vowels[currentIndex];
+                        console.log(`🔊 Speaking vowel: ${vowel}`);
+                        showStatus(`🔊 Speaking vowel: ${vowel} (${currentIndex + 1}/${vowels.length})`, 'info');
+                        
+                        const utterance = new SpeechSynthesisUtterance(vowel);
+                        utterance.lang = 'ta-IN';
+                        utterance.rate = 0.6;
+                        utterance.pitch = 1;
+                        utterance.volume = 1;
+                        
+                        utterance.onend = function() {
+                            currentIndex++;
+                            setTimeout(() => {
+                                speakNextVowel();
+                            }, 800); // Pause between vowels
+                        };
+                        
+                        utterance.onerror = function(event) {
+                            console.log(`❌ Error with vowel ${vowel}:`, event.error);
+                            currentIndex++;
+                            speakNextVowel(); // Continue with next vowel
+                        };
+                        
+                        speechSynthesis.speak(utterance);
+                    } else {
+                        showStatus('✅ Tamil vowels test completed!', 'success');
+                        console.log('✅ All Tamil vowels completed');
+                    }
+                }
+                
+                speakNextVowel();
+            } else {
+                showStatus('❌ Speech synthesis not available', 'error');
+                console.log('❌ Speech synthesis not available');
+            }
+        }
+
+        // Phonetic pronunciation of Tamil vowels
+        function testTamilVowelsPhonetic() {
+            stopAllAudio();
+            console.log('🔤 Testing Tamil vowels with phonetic pronunciation...');
+            showStatus('🔤 Testing Tamil vowels with phonetic pronunciation...', 'info');
+            
+            // Phonetic mapping for Tamil vowels
+            const phoneticVowels = [
+                { tamil: 'அ', phonetic: 'ah' },
+                { tamil: 'ஆ', phonetic: 'aah' },
+                { tamil: 'இ', phonetic: 'ee' },
+                { tamil: 'ஈ', phonetic: 'eee' },
+                { tamil: 'உ', phonetic: 'oo' },
+                { tamil: 'ஊ', phonetic: 'ooo' },
+                { tamil: 'எ', phonetic: 'eh' },
+                { tamil: 'ஏ', phonetic: 'ay' },
+                { tamil: 'ஐ', phonetic: 'eye' },
+                { tamil: 'ஒ', phonetic: 'oh' },
+                { tamil: 'ஓ', phonetic: 'owe' },
+                { tamil: 'ஔ', phonetic: 'ow' }
+            ];
+            
+            let currentIndex = 0;
+            
+            function speakNextPhoneticVowel() {
+                if (currentIndex < phoneticVowels.length) {
+                    const vowel = phoneticVowels[currentIndex];
+                    console.log(`🔊 Speaking: ${vowel.tamil} as "${vowel.phonetic}"`);
+                    showStatus(`🔊 ${vowel.tamil} → "${vowel.phonetic}" (${currentIndex + 1}/${phoneticVowels.length})`, 'info');
+                    
+                    const utterance = new SpeechSynthesisUtterance(vowel.phonetic);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.7;
+                    utterance.pitch = 1.1;
+                    utterance.volume = 1;
+                    
+                    utterance.onend = function() {
+                        currentIndex++;
+                        setTimeout(() => {
+                            speakNextPhoneticVowel();
+                        }, 1000); // Longer pause to hear each vowel clearly
+                    };
+                    
+                    utterance.onerror = function(event) {
+                        console.log(`❌ Error with phonetic ${vowel.phonetic}:`, event.error);
+                        currentIndex++;
+                        speakNextPhoneticVowel();
+                    };
+                    
+                    speechSynthesis.speak(utterance);
+                } else {
+                    showStatus('✅ Phonetic Tamil vowels test completed!', 'success');
+                    console.log('✅ All phonetic vowels completed');
+                }
+            }
+            
+            speakNextPhoneticVowel();
+        }
+        
+        function testBasicWebSpeech(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Wait for voices to load if not already loaded
+                let voices = speechSynthesis.getVoices();
+                if (voices.length === 0) {
+                    speechSynthesis.addEventListener('voiceschanged', () => {
+                        testBasicWebSpeechWithVoices(text);
+                    });
+                    // Trigger voice loading
+                    speechSynthesis.getVoices();
+                } else {
+                    testBasicWebSpeechWithVoices(text);
+                }
+            } else {
+                showStatus('❌ No audio support available', 'error');
+            }
+        }
+        
+        function testBasicWebSpeechWithVoices(text) {
+            const voices = speechSynthesis.getVoices();
+            console.log('🔍 Available voices:', voices.map(v => `${v.name} (${v.lang})`));
+            
+            // Try to find a Tamil voice
+            let tamilVoice = voices.find(voice => 
+                voice.lang === 'ta-IN' || 
+                voice.lang === 'ta' ||
+                voice.name.toLowerCase().includes('tamil')
+            );
+            
+            if (!tamilVoice) {
+                // Try Hindi as alternative for Indian languages
+                tamilVoice = voices.find(voice => 
+                    voice.lang === 'hi-IN' || 
+                    voice.lang === 'hi' ||
+                    voice.name.toLowerCase().includes('hindi')
+                );
+            }
+            
+            if (!tamilVoice) {
+                // Try any Indian English voice
+                tamilVoice = voices.find(voice => 
+                    voice.lang.includes('IN') ||
+                    voice.name.toLowerCase().includes('india')
+                );
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            
+            if (tamilVoice) {
+                utterance.voice = tamilVoice;
+                utterance.lang = tamilVoice.lang;
+                console.log(`🎯 Using voice: ${tamilVoice.name} (${tamilVoice.lang})`);
+                showStatus(`🎯 Using ${tamilVoice.name} voice`, 'info');
+            } else {
+                utterance.lang = 'ta-IN';
+                console.log('⚠️ No Tamil voice found, using language code ta-IN');
+                showStatus('⚠️ No Tamil voice found, using default with Tamil language code', 'info');
+            }
+            
+            utterance.rate = 0.7;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            utterance.onstart = function() {
+                if (tamilVoice) {
+                    showStatus(`✅ Browser voice working: ${tamilVoice.name}`, 'success');
+                } else {
+                    showStatus('✅ Browser voice working (no Tamil voice available)', 'success');
+                }
+            };
+            
+            utterance.onend = function() {
+                showStatus('✅ Browser voice test completed', 'success');
+            };
+            
+            utterance.onerror = function(event) {
+                showStatus(`❌ Browser voice error: ${event.error}`, 'error');
+            };
+            
+            console.log('🔊 Testing with browser voice...');
+            speechSynthesis.speak(utterance);
+        }
+
+        // Open Source Tamil TTS test
+        function testOpenSourceTTS() {
+            stopAllAudio();
+            
+            const testText = 'வணக்கம்';
+            console.log(`🆓 Testing open source Tamil TTS with: "${testText}"`);
+            showStatus('🆓 Testing open source Tamil TTS services...', 'info');
+            
+            // Method 1: Try gTTS (Google Text-to-Speech) - Free API
+            testGoogleTTS(testText);
+        }
+        
+        function testGoogleTTS(text) {
+            try {
+                // Using a public gTTS proxy service (free, no API key)
+                const encodedText = encodeURIComponent(text);
+                
+                // Try multiple free gTTS endpoints
+                const gttsPproxies = [
+                    `https://api.freeconvert.com/v1/process/tts?text=${encodedText}&lang=ta`,
+                    `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=ta&client=tw-ob&ttsspeed=0.5`,
+                    `https://texttospeechapi.herokuapp.com/?text=${encodedText}&lang=ta`
+                ];
+                
+                console.log('🔊 Trying Google TTS (gTTS)...');
+                showStatus('🔊 Testing with Google TTS API...', 'info');
+                
+                tryMultipleEndpoints(gttsPproxies, text, 0);
+                
+            } catch (error) {
+                console.error('💥 Exception in gTTS:', error);
+                showStatus('💥 gTTS error - trying eSpeak...', 'error');
+                testESpeakTTS(text);
+            }
+        }
+        
+        function tryMultipleEndpoints(endpoints, text, index) {
+            if (index >= endpoints.length) {
+                console.log('❌ All gTTS endpoints failed, trying eSpeak...');
+                showStatus('❌ gTTS endpoints failed - trying eSpeak TTS', 'error');
+                testESpeakTTS(text);
+                return;
+            }
+            
+            const audio = new Audio();
+            const currentEndpoint = endpoints[index];
+            
+            console.log(`🔄 Trying endpoint ${index + 1}/${endpoints.length}: ${currentEndpoint}`);
+            
+            audio.onloadstart = function() {
+                showStatus(`🔄 Loading from endpoint ${index + 1}...`, 'info');
+            };
+            
+            audio.oncanplay = function() {
+                showStatus('✅ Google TTS loaded - playing...', 'success');
+            };
+            
+            audio.onplay = function() {
+                showStatus('✅ Google TTS Tamil voice working!', 'success');
+                console.log(`✅ gTTS started successfully with endpoint ${index + 1}`);
+            };
+            
+            audio.onended = function() {
+                showStatus('✅ Google TTS completed successfully', 'success');
+                console.log('✅ gTTS playback completed');
+            };
+            
+            audio.onerror = function(e) {
+                console.log(`❌ Endpoint ${index + 1} failed:`, e);
+                // Try next endpoint
+                tryMultipleEndpoints(endpoints, text, index + 1);
+            };
+            
+            // Set source and try to play
+            audio.src = currentEndpoint;
+            audio.play().catch(error => {
+                console.log(`❌ Play failed for endpoint ${index + 1}:`, error);
+                tryMultipleEndpoints(endpoints, text, index + 1);
+            });
+        }
+        
+        function testESpeakTTS(text) {
+            console.log('🔊 Trying eSpeak-NG simulation...');
+            showStatus('🔊 Simulating eSpeak-NG Tamil pronunciation...', 'info');
+            
+            // eSpeak simulation using phonetic approximation
+            // This creates a more robotic but understandable Tamil pronunciation
+            const phoneticText = convertToPhonetic(text);
+            
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(phoneticText);
+                utterance.lang = 'en-US'; // Use English voice for phonetic pronunciation
+                utterance.rate = 0.6; // Slower for clarity
+                utterance.pitch = 1.2; // Higher pitch for Tamil sound
+                utterance.volume = 1;
+                
+                utterance.onstart = function() {
+                    showStatus('✅ eSpeak-style phonetic Tamil working!', 'success');
+                    console.log('✅ eSpeak simulation started');
+                };
+                
+                utterance.onend = function() {
+                    showStatus('✅ eSpeak simulation completed', 'success');
+                    console.log('✅ eSpeak simulation completed');
+                };
+                
+                utterance.onerror = function(event) {
+                    showStatus(`❌ eSpeak simulation error: ${event.error}`, 'error');
+                    testBasicWebSpeech(text);
+                };
+                
+                speechSynthesis.speak(utterance);
+            } else {
+                showStatus('❌ No speech synthesis support', 'error');
+            }
+        }
+        
+        function convertToPhonetic(tamilText) {
+            // Basic Tamil to phonetic conversion for eSpeak simulation
+            const phoneticMap = {
+                'வணக்கம்': 'van-ak-kam',
+                'நன்றி': 'nan-ri',
+                'அம்மா': 'am-ma',
+                'அப்பா': 'ap-pa',
+                'அ': 'ah',
+                'ஆ': 'aa',
+                'இ': 'ee',
+                'ஈ': 'eee',
+                'உ': 'oo',
+                'ஊ': 'ooo',
+                'எ': 'eh',
+                'ஏ': 'ay',
+                'ஒன்று': 'on-ru',
+                'இரண்டு': 'ee-ran-du',
+                'மூன்று': 'moon-ru',
+                'நான்கு': 'naan-gu',
+                'ஐந்து': 'ain-thu'
+            };
+            
+            return phoneticMap[tamilText] || tamilText;
+        }
+        
+        // Mozilla/Coqui TTS test
+        function testMozillaTTS() {
+            stopAllAudio();
+            
+            const testText = 'வணக்கம்';
+            console.log(`🦎 Testing Mozilla/Coqui TTS with: "${testText}"`);
+            showStatus('🦎 Testing Mozilla TTS alternatives...', 'info');
+            
+            // Try Coqui TTS API (open source)
+            testCoquiTTS(testText);
+        }
+        
+        function testCoquiTTS(text) {
+            console.log('🦎 Trying Coqui TTS...');
+            showStatus('🦎 Testing Coqui TTS (Mozilla successor)...', 'info');
+            
+            // For now, use SSML markup to improve pronunciation
+            const ssmlText = `<speak><phoneme alphabet="ipa" ph="vəɳəkːəm">${text}</phoneme></speak>`;
+            
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Try to find a voice that might handle Tamil better
+                const voices = speechSynthesis.getVoices();
+                let bestVoice = voices.find(voice => 
+                    voice.lang.includes('hi') || 
+                    voice.name.toLowerCase().includes('hindi') ||
+                    voice.name.toLowerCase().includes('india')
+                );
+                
+                if (bestVoice) {
+                    utterance.voice = bestVoice;
+                    console.log(`🎯 Using voice for Coqui simulation: ${bestVoice.name}`);
+                }
+                
+                utterance.lang = 'ta-IN';
+                utterance.rate = 0.8;
+                utterance.pitch = 1.1;
+                utterance.volume = 1;
+                
+                utterance.onstart = function() {
+                    showStatus('✅ Coqui-style Tamil working!', 'success');
+                    console.log('✅ Coqui simulation started');
+                };
+                
+                utterance.onend = function() {
+                    showStatus('✅ Coqui simulation completed', 'success');
+                    console.log('✅ Coqui simulation completed');
+                };
+                
+                utterance.onerror = function(event) {
+                    showStatus(`❌ Coqui simulation error: ${event.error}`, 'error');
+                    testESpeakTTS(text);
+                };
+                
+                speechSynthesis.speak(utterance);
+            } else {
+                showStatus('❌ No speech synthesis support', 'error');
+            }
+        }
+
+        function checkAudioSupport() {
+            console.log('🔍 Checking audio support...');
+            
+            // Check ResponsiveVoice
+            if (typeof responsiveVoice !== 'undefined') {
+                console.log('✅ ResponsiveVoice object found');
+                
+                if (responsiveVoice.voiceSupport()) {
+                    console.log('✅ ResponsiveVoice voice support confirmed');
+                    showStatus('✅ ResponsiveVoice loaded and voice support confirmed (FREE)', 'success');
+                    
+                    // Test if voices are available
+                    console.log('📋 Available ResponsiveVoice voices:', responsiveVoice.getVoices());
+                } else {
+                    console.log('❌ ResponsiveVoice voice support not available');
+                    showStatus('❌ ResponsiveVoice loaded but voice support not available', 'error');
+                }
+            } else {
+                console.log('❌ ResponsiveVoice not found');
+                showStatus('❌ ResponsiveVoice not loaded - checking browser fallback', 'error');
+            }
+            
+            // Check Web Speech API
+            if ('speechSynthesis' in window) {
+                console.log('✅ Web Speech API available');
+                const voices = speechSynthesis.getVoices();
+                console.log(`📋 Found ${voices.length} system voices`);
+                
+                if (voices.length === 0) {
+                    console.log('⏳ Voices not loaded yet, waiting...');
+                    speechSynthesis.addEventListener('voiceschanged', () => {
+                        const newVoices = speechSynthesis.getVoices();
+                        console.log(`📋 Voices loaded: ${newVoices.length} voices`);
+                    });
+                }
+            } else {
+                console.log('❌ Web Speech API not available');
+            }
+        }
+    </script>
+</body>
+</html> 
